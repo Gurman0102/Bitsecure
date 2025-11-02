@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Theme Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 20 14.3% 4.1%;
+            --card: 0 0% 100%;
+            --card-foreground: 20 14.3% 4.1%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 20 14.3% 4.1%;
+            --primary: 24.6 95% 53.1%;
+            --primary-foreground: 60 9.1% 97.8%;
+            --secondary: 60 4.8% 95.9%;
+            --secondary-foreground: 24 9.8% 10%;
+            --muted: 60 4.8% 95.9%;
+            --muted-foreground: 25 5.3% 44.7%;
+            --accent: 60 4.8% 95.9%;
+            --accent-foreground: 24 9.8% 10%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 60 9.1% 97.8%;
+            --border: 20 5.9% 90%;
+            --input: 20 5.9% 90%;
+            --ring: 24.6 95% 53.1%;
+            --chart-1: 12 76% 61%;
+            --chart-2: 173 58% 39%;
+            --chart-3: 197 37% 24%;
+            --chart-4: 43 74% 66%;
+            --chart-5: 27 87% 67%;
+        }
+
+        .dark {
+            --background: 20 14.3% 4.1%;
+            --foreground: 60 9.1% 97.8%;
+            --card: 20 14.3% 4.1%;
+            --card-foreground: 60 9.1% 97.8%;
+            --popover: 20 14.3% 4.1%;
+            --popover-foreground: 60 9.1% 97.8%;
+            --primary: 20.5 90.2% 48.2%;
+            --primary-foreground: 60 9.1% 97.8%;
+            --secondary: 12 6.5% 15.1%;
+            --secondary-foreground: 60 9.1% 97.8%;
+            --muted: 12 6.5% 15.1%;
+            --muted-foreground: 24 5.4% 63.9%;
+            --accent: 12 6.5% 15.1%;
+            --accent-foreground: 60 9.1% 97.8%;
+            --destructive: 0 72.2% 50.6%;
+            --destructive-foreground: 60 9.1% 97.8%;
+            --border: 12 6.5% 15.1%;
+            --input: 12 6.5% 15.1%;
+            --ring: 20.5 90.2% 48.2%;
+            --chart-1: 220 70% 50%;
+            --chart-2: 160 60% 45%;
+            --chart-3: 30 80% 55%;
+            --chart-4: 280 65% 60%;
+            --chart-5: 340 75% 55%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            padding: 2rem;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid hsl(var(--border));
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .toggle-btn {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .toggle-btn:hover {
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .color-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.65rem;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .color-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 100px;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid hsl(var(--border));
+        }
+
+        .color-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--foreground));
+        }
+
+        .color-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            color: hsl(var(--foreground));
+        }
+
+        .demo-section {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.65rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .button-demo {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+
+        .btn-secondary {
+            background: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+        }
+
+        .btn-destructive {
+            background: hsl(var(--destructive));
+            color: hsl(var(--destructive-foreground));
+        }
+
+        .chart-demo {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            height: 150px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Color Theme Visualizer</h1>
+        <button class="toggle-btn" onclick="toggleTheme()">Toggle Dark Mode</button>
+    </div>
+
+    <h2 class="section-title">Base Colors</h2>
+    <div class="grid" id="baseColors"></div>
+
+    <h2 class="section-title">Chart Colors</h2>
+    <div class="grid" id="chartColors"></div>
+
+    <h2 class="section-title">Interactive Demos</h2>
+    
+    <div class="demo-section">
+        <h3 style="margin-bottom: 1rem;">Buttons</h3>
+        <div class="button-demo">
+            <button class="btn btn-primary">Primary Button</button>
+            <button class="btn btn-secondary">Secondary Button</button>
+            <button class="btn btn-destructive">Destructive Button</button>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h3 style="margin-bottom: 1rem;">Chart Colors</h3>
+        <div class="chart-demo">
+            <div class="chart-bar" style="background: hsl(var(--chart-1)); height: 120px;">1</div>
+            <div class="chart-bar" style="background: hsl(var(--chart-2)); height: 90px;">2</div>
+            <div class="chart-bar" style="background: hsl(var(--chart-3)); height: 150px;">3</div>
+            <div class="chart-bar" style="background: hsl(var(--chart-4)); height: 100px;">4</div>
+            <div class="chart-bar" style="background: hsl(var(--chart-5)); height: 130px;">5</div>
+        </div>
+    </div>
+
+    <script>
+        const baseColorVars = [
+            'background', 'foreground', 'card', 'card-foreground',
+            'popover', 'popover-foreground', 'primary', 'primary-foreground',
+            'secondary', 'secondary-foreground', 'muted', 'muted-foreground',
+            'accent', 'accent-foreground', 'destructive', 'destructive-foreground',
+            'border', 'input', 'ring'
+        ];
+
+        const chartColorVars = ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'];
+
+        function createColorCard(varName) {
+            const value = getComputedStyle(document.documentElement).getPropertyValue(`--${varName}`).trim();
+            return `
+                <div class="color-card">
+                    <div class="color-swatch" style="background: hsl(var(--${varName}));"></div>
+                    <div class="color-name">${varName}</div>
+                    <div class="color-value">hsl(${value})</div>
+                </div>
+            `;
+        }
+
+        function renderColors() {
+            document.getElementById('baseColors').innerHTML = baseColorVars.map(createColorCard).join('');
+            document.getElementById('chartColors').innerHTML = chartColorVars.map(createColorCard).join('');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            renderColors();
+        }
+
+        renderColors();
+    </script>
+</body>
+</html>
